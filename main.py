@@ -78,21 +78,22 @@ def main():
     new_playlist_id = get_new_playlist_id(sp_personal)
 
     tracklist = (create_total_track_list(sp))
+    final_tracklist = list(tracklist)
     n_tracks = len(tracklist)
     
     if n_tracks <= 100:
-        sp_personal.playlist_replace_items(new_playlist_id,tracklist)
+        sp_personal.playlist_replace_items(new_playlist_id,final_tracklist)
     else:
         uploaded_tracks: int = 0
-        sp_personal.playlist_replace_items(new_playlist_id,tracklist[uploaded_tracks:uploaded_tracks+99])
+        sp_personal.playlist_replace_items(new_playlist_id,final_tracklist[uploaded_tracks:uploaded_tracks+99])
         uploaded_tracks += 99
 
         while uploaded_tracks + 99 <= n_tracks - 1:
-            sp_personal.playlist_add_items(new_playlist_id,tracklist[uploaded_tracks:uploaded_tracks+99])
+            sp_personal.playlist_add_items(new_playlist_id,final_tracklist[uploaded_tracks:uploaded_tracks+99])
             uploaded_tracks += 99
         
         if uploaded_tracks < n_tracks - 1:
-            sp_personal.playlist_add_items(new_playlist_id,tracklist[uploaded_tracks:n_tracks-1])
+            sp_personal.playlist_add_items(new_playlist_id,final_tracklist[uploaded_tracks:n_tracks-1])
 
 
 
