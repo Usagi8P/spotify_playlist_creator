@@ -1,5 +1,6 @@
 import spotipy #type: ignore
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth #type: ignore
+from typing import NoReturn
 from api_setup import logger_setup, set_env_variables
 
 
@@ -58,17 +59,12 @@ def get_new_playlist_id(sp_personal) -> str:
     try:
         with open('secrets/playlist_id.txt','r') as f:
             playlist_id = f.readline()
-
-            if playlist_id:
-                return playlist_id
-
-            if not playlist_id:
-                return create_new_playlist(sp_personal)
-
     except:
         return create_new_playlist(sp_personal)
-    
-    
+
+    if playlist_id:
+        return playlist_id
+    return create_new_playlist(sp_personal)
 
 
 def main():
@@ -79,27 +75,24 @@ def main():
     scope='playlist-modify-public'
     sp_personal = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
-    tracklist = (create_total_track_list(sp))
-    set_tracklist = set(tracklist)
-
     new_playlist_id = get_new_playlist_id(sp_personal)
 
-    final_tracklist = tracklist
-    n_tracks = len(final_tracklist)
+    tracklist = (create_total_track_list(sp))
+    n_tracks = len(tracklist)
     
     if n_tracks <= 100:
-        sp_personal.playlist_replace_items(new_playlist_id,final_tracklist)
+        sp_personal.playlist_replace_items(new_playlist_id,tracklist)
     else:
         uploaded_tracks: int = 0
-        sp_personal.playlist_replace_items(new_playlist_id,final_tracklist[uploaded_tracks:uploaded_tracks+99])
+        sp_personal.playlist_replace_items(new_playlist_id,tracklist[uploaded_tracks:uploaded_tracks+99])
         uploaded_tracks += 99
 
         while uploaded_tracks + 99 <= n_tracks - 1:
-            sp_personal.playlist_add_items(new_playlist_id,final_tracklist[uploaded_tracks:uploaded_tracks+99])
+            sp_personal.playlist_add_items(new_playlist_id,tracklist[uploaded_tracks:uploaded_tracks+99])
             uploaded_tracks += 99
         
         if uploaded_tracks < n_tracks - 1:
-            sp_personal.playlist_add_items(new_playlist_id,final_tracklist[uploaded_tracks:n_tracks-1])
+            sp_personal.playlist_add_items(new_playlist_id,tracklist[uploaded_tracks:n_tracks-1])
 
 
 
