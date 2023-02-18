@@ -1,5 +1,5 @@
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
+import spotipy #type: ignore
+from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth #type: ignore
 from api_setup import logger_setup, set_env_variables
 
 
@@ -29,15 +29,15 @@ def get_songs_in_playlist(sp,pl_id):
     return response
 
 
-def create_total_track_list(sp) -> list[str]:
+def create_total_track_list(sp) -> set[str]:
     playlists: list[str] = get_playlists()
 
-    track_ids: list[str] = []
+    track_ids: set[str] = set()
     for playlist in playlists:
         response = get_songs_in_playlist(sp,playlist)
 
         for item in response['items']:
-            track_ids.append(item['track']['id'])
+            track_ids.add(item['track']['id'])
 
     return track_ids
 
@@ -67,6 +67,8 @@ def get_new_playlist_id(sp_personal) -> str:
 
     except:
         return create_new_playlist(sp_personal)
+    
+    
 
 
 def main():
@@ -82,7 +84,7 @@ def main():
 
     new_playlist_id = get_new_playlist_id(sp_personal)
 
-    final_tracklist = list(set_tracklist)
+    final_tracklist = tracklist
     n_tracks = len(final_tracklist)
     
     if n_tracks <= 100:
