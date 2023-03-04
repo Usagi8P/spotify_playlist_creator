@@ -1,6 +1,5 @@
 import spotipy #type: ignore
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth #type: ignore
-from typing import NoReturn
 from api_setup import logger_setup, set_env_variables
 
 
