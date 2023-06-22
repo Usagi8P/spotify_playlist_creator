@@ -74,11 +74,11 @@ def main():
     scope='playlist-modify-public'
     sp_personal = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
-    new_playlist_id = get_new_playlist_id(sp_personal)
-
     tracklist = (create_total_track_list(sp))
     final_tracklist = list(tracklist)
     n_tracks = len(tracklist)
+
+    new_playlist_id = get_new_playlist_id(sp_personal)
     
     if n_tracks <= 100:
         sp_personal.playlist_replace_items(new_playlist_id,final_tracklist)
