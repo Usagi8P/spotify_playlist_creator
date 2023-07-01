@@ -2,10 +2,17 @@ import os
 import logging
 
 def logger_setup() -> None:
+    """
+    Set up fr logging files.
+    """
+    
     logging.basicConfig(filename='logfile.log', encoding='utf-8',level=logging.DEBUG)
 
-
-def read_secrets() -> dict[str,str]: # Returns a dict of all secrets?
+def read_secrets() -> dict[str,str]:
+    """
+    Reads the Spotify credentials needed to interact with the API.
+    """
+    
     secrets: dict[str,str] = {}
 
     with open('secrets/secrets.txt','r') as f:
@@ -16,9 +23,12 @@ def read_secrets() -> dict[str,str]: # Returns a dict of all secrets?
 
     return secrets
 
-
-# Set environment variables using secrets file
 def set_env_variables() -> None:
+    """
+    Sets environent variables to the required Spotify credentials.
+    This is only active for the session and must be run at the beginning of each session.
+    """
+    
     secrets: dict[str,str] = read_secrets()
 
     if 'SPOTIPY_CLIENT_ID' in os.environ:
